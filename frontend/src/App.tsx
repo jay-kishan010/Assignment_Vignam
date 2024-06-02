@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import logo from './logo.svg';
-import { Drawer } from '@mantine/core';
+import { Drawer, Input, TextInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import './App.css';
 // import { TfiWrite } from "react-icons/tfi";
@@ -15,7 +15,7 @@ import { Modal } from '@mantine/core';
 // import { useDisclosure } from '@mantine/hooks';
 import { Grid, Skeleton, Container } from '@mantine/core';
 import Navbar from './components/Navbar';
-
+import { FaChevronLeft } from "react-icons/fa";
 const child = <Skeleton height={140} radius="md" animate={false} />;
 function App() {
   // const [ { toggle }] = useDisclosure();
@@ -69,11 +69,13 @@ const [file, setFile] = useState<File | null>(null);
     </AppShell.Navbar>
 
     <AppShell.Main>
-    <Box bg="red.5" my="xl" component="a" href="/">
-    <Title order={2}>This is h2 title</Title>
-    <Text size="lg">Large text</Text>
+<div style={{display:"flex", flexDirection:"row",gap:"20px"}}>
+<FaChevronLeft />
+    <Text fw={600}>Chapter Name</Text>
+</div>
+   
     <Divider my="md" />
-       </Box>
+      
        <Container my="md">
       <Grid>
         <Grid.Col span={{ base: 12, xs: 6 }}>{child}</Grid.Col>
@@ -84,25 +86,21 @@ const [file, setFile] = useState<File | null>(null);
 
       <>
       <Modal opened={opened} onClose={close} title="Add Content" centered>
-      <div style={{display:"flex"}}>
+     
      
     <Paper shadow="xs" p="xl">
     <input type="file" onChange={handleFileChange} />
-      <button onClick={handleFileUpload}>Upload</button>
+     
       <Text>
-        Use it to create cards, dropdowns, modals and other components that require background
-        with shadow
+     
       </Text>
     </Paper>
     <Paper shadow="xs" p="xl">
      
-      <Text>
-        Use it to create cards, dropdowns, modals and other components that require background
-        with shadow
-      </Text>
+    <Input placeholder="Type description" />
     </Paper>
 
-      </div>
+     
     <div style={{display:"flex", margin:"5px",justifyContent:"end"}}>
       <Button>Cancel</Button><Button variant="light">Add Content</Button>
     </div>
@@ -113,7 +111,7 @@ const [file, setFile] = useState<File | null>(null);
       <div style={{alignItems:'center',margin:"30px",padding:"50px" }}>
       <FaPager />
       <Text size='lg'>Content Not Added</Text>
-      <Button>Add Content</Button>
+      <Button  onClick={handleFileUpload}>Add Content</Button>
       </div>
       </div>
       </div>
