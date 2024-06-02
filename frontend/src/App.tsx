@@ -1,25 +1,128 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import logo from './logo.svg';
+import { Drawer } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import './App.css';
+// import { TfiWrite } from "react-icons/tfi";
+// import { AppShell, Navbar, Text, Burger, 
+// import {  } from '@mantine/core';
+import { AppShell, Text, Burger,  useMantineTheme, Flex, Avatar, Button, Title, Divider, Paper } from '@mantine/core';
+// import { useDisclosure } from '@mantine/hooks';
+import { Group, Collapse, Box } from '@mantine/core';
+import { FaPager } from "react-icons/fa";
+// import { useDisclosure } from '@mantine/hooks';
+import { Modal } from '@mantine/core';
+// import { useDisclosure } from '@mantine/hooks';
+import { Grid, Skeleton, Container } from '@mantine/core';
+import Navbar from './components/Navbar';
 
+const child = <Skeleton height={140} radius="md" animate={false} />;
 function App() {
+  // const [ { toggle }] = useDisclosure();
+  const theme = useMantineTheme();
+const [opened, { open, close }] = useDisclosure(false);
+const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:8000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const responseData = await response.json();
+      console.log(responseData.message);
+    } catch (error) {
+      console.error('Error uploading the file:', error);
+    }
+  };
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <AppShell
+    navbar={{
+      width: 300,
+      breakpoint: 'sm',
+      collapsed: { mobile: !opened },
+    }}
+    padding="md"
+  >
+ 
+
+    <AppShell.Navbar p="md">
+    
+    <Navbar/>
+
+    </AppShell.Navbar>
+
+    <AppShell.Main>
+    <Box bg="red.5" my="xl" component="a" href="/">
+    <Title order={2}>This is h2 title</Title>
+    <Text size="lg">Large text</Text>
+    <Divider my="md" />
+       </Box>
+       <Container my="md">
+      <Grid>
+        <Grid.Col span={{ base: 12, xs: 6 }}>{child}</Grid.Col>
+        <Grid.Col span={{ base: 12, xs: 6 }}>{child}</Grid.Col>
+        {/* <Grid.Col span={{ base: 12, xs: 4 }}>{child}</Grid.Col> */}
+        
+      </Grid>
+
+      <>
+      <Modal opened={opened} onClose={close} title="Add Content" centered>
+      <div style={{display:"flex"}}>
+     
+    <Paper shadow="xs" p="xl">
+    <input type="file" onChange={handleFileChange} />
+      <button onClick={handleFileUpload}>Upload</button>
+      <Text>
+        Use it to create cards, dropdowns, modals and other components that require background
+        with shadow
+      </Text>
+    </Paper>
+    <Paper shadow="xs" p="xl">
+     
+      <Text>
+        Use it to create cards, dropdowns, modals and other components that require background
+        with shadow
+      </Text>
+    </Paper>
+
+      </div>
+    <div style={{display:"flex", margin:"5px",justifyContent:"end"}}>
+      <Button>Cancel</Button><Button variant="light">Add Content</Button>
     </div>
+      </Modal>
+
+      <div style={{display:"flex", flexDirection:"column",justifyContent:"center", alignItems:"center"}}>
+      <div onClick={open}  style={{width:"300px", height:"300px", backgroundColor:"#FFFAFA"}}>
+      <div style={{alignItems:'center',margin:"30px",padding:"50px" }}>
+      <FaPager />
+      <Text size='lg'>Content Not Added</Text>
+      <Button>Add Content</Button>
+      </div>
+      </div>
+      </div>
+    </>
+    </Container>
+
+    </AppShell.Main>
+  </AppShell>
+
   );
 }
 
